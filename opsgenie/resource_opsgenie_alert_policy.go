@@ -301,7 +301,7 @@ func resourceOpsGenieAlertPolicyCreate(d *schema.ResourceData, meta interface{})
 		IgnoreOriginalResponders: &ignore_original_responders,
 		IgnoreOriginalTags:       &ignore_original_tags,
 		Priority:                 alert.Priority(priority),
-		Tags:                     flattenOpsgenieAlertPolicyTags(d),
+		Tags:                     flattenTags(d, "tags"),
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
@@ -418,7 +418,7 @@ func resourceOpsGenieAlertPolicyUpdate(d *schema.ResourceData, meta interface{})
 		IgnoreOriginalResponders: &ignore_original_responders,
 		IgnoreOriginalTags:       &ignore_original_tags,
 		Priority:                 alert.Priority(priority),
-		Tags:                     flattenOpsgenieAlertPolicyTags(d),
+		Tags:                     flattenTags(d, "tags"),
 	}
 
 	if len(d.Get("responders").([]interface{})) > 0 {
@@ -663,21 +663,6 @@ func flattenOpsgenieAlertPolicyTimeRestriction(input *og.TimeRestriction) []map[
 	element["type"] = input.Type
 	output = append(output, element)
 	return output
-}
-
-func flattenOpsgenieAlertPolicyTags(d *schema.ResourceData) []string {
-	input := d.Get("tags").(*schema.Set)
-	tags := make([]string, len(input.List()))
-
-	if input == nil {
-		return tags
-	}
-
-	for k, v := range input.List() {
-		tags[k] = v.(string)
-	}
-
-	return tags
 }
 
 func flattenOpsgenieAlertPolicyActions(d *schema.ResourceData) []string {

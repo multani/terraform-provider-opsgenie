@@ -58,3 +58,18 @@ func validateDate(v interface{}, k string) (ws []string, errors []error) {
 
 	return
 }
+
+func flattenTags(d *schema.ResourceData, fieldName string) []string {
+	input := d.Get(fieldName).(*schema.Set)
+	tags := make([]string, len(input.List()))
+
+	if input == nil {
+		return tags
+	}
+
+	for k, v := range input.List() {
+		tags[k] = v.(string)
+	}
+
+	return tags
+}
